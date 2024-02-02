@@ -1,5 +1,5 @@
 import multer from "multer";
-import { MIME_TYPE_MAP } from "../utils/static";
+import { MIME_TYPE_MAP } from "../utils/static.js";
 
 export const storage = multer.diskStorage({
   destination: (req, file, cb) => {

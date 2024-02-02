@@ -7,7 +7,7 @@ export const getAllComments = async (req, res) => {
 
   try {
     const comments = await Comment.find({ post: postId })
-      .populate("user")
+      .populate("user", "email username")
       .sort({ createdAt: "descending" });
 
     if (!comments) {

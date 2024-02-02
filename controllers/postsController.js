@@ -36,13 +36,18 @@ export const getSinglePost = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const post = await Post.findById(id).populate({
-      path: "comments",
-      populate: {
-        path: "user",
+    const post = await Post.findById(id)
+      .populate({
+        path: "author",
         select: "email username",
-      },
-    });
+      })
+      .populate({
+        path: "comments",
+        populate: {
+          path: "user",
+          select: "email username",
+        },
+      });
 
     if (!post) return res.status(404).json({ message: "No Post Was Found" });
 
