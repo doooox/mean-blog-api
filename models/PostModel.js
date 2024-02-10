@@ -21,6 +21,12 @@ const postSchema = new Schema(
       ref: "User",
       required: true,
     },
+    categories: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Category",
+      },
+    ],
     comments: [
       {
         type: Schema.Types.ObjectId,

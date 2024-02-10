@@ -1,4 +1,5 @@
 import Post from "../models/PostModel.js";
+import Category from "../models/CommentModel.js";
 
 export const getPosts = async (req, res) => {
   try {
@@ -36,18 +37,20 @@ export const getSinglePost = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const post = await Post.findById(id)
-      .populate({
+    const post = await Post.findById(id).populate([
+      {
         path: "author",
         select: "email username",
-      })
-      .populate({
+      },
+      { path: "categories" },
+      {
         path: "comments",
         populate: {
           path: "user",
           select: "email username",
         },
-      });
+      },
+    ]);
 
     if (!post) return res.status(404).json({ message: "No Post Was Found" });
 
@@ -60,15 +63,24 @@ export const getSinglePost = async (req, res) => {
 
 export const addPost = async (req, res) => {
   try {
-    const { title, content } = req.body;
+    const { title, content, categories } = req.body;
     const user = req.user.id;
     const url = req.protocol + "://" + req.get("host");
+
+    // const postCategories = await Promise.all(
+    //   categories.map(async (category) => {
+    //     return await category.findById(category._id);
+    //   })
+    // );
+    // console.log(postCategories);
+    const parsedCategories = JSON.parse(categories);
 
     const post = await Post.create({
       title,
       content,
       imagePath: url + "/images/" + req.file.filename,
       author: user,
+      categories: parsedCategories,
     });
 
     if (!post) return res.status(400).json({ message: "Invalid Data." });
