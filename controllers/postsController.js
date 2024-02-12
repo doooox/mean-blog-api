@@ -1,5 +1,4 @@
 import Post from "../models/PostModel.js";
-import Category from "../models/CommentModel.js";
 
 export const getPosts = async (req, res) => {
   try {
@@ -67,12 +66,6 @@ export const addPost = async (req, res) => {
     const user = req.user.id;
     const url = req.protocol + "://" + req.get("host");
 
-    // const postCategories = await Promise.all(
-    //   categories.map(async (category) => {
-    //     return await category.findById(category._id);
-    //   })
-    // );
-    // console.log(postCategories);
     const parsedCategories = JSON.parse(categories);
 
     const post = await Post.create({
@@ -88,6 +81,29 @@ export const addPost = async (req, res) => {
     return res.status(201).json(post);
   } catch (error) {
     console.error("Error adding post:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getPostsByCategory = async (req, res) => {
+  const { categoryId } = req.params;
+  const { pageSize, page } = req.query;
+  const parsedPageSize = parseInt(pageSize);
+  const parsedPage = parseInt(page);
+
+  try {
+    const totalCount = await Post.countDocuments({ categories: categoryId });
+
+    const posts = await Post.find({ categories: categoryId })
+      .sort({ createdAt: "descending" })
+      .skip(parsedPageSize * (parsedPage - 1))
+      .limit(parsedPageSize);
+
+    if (!posts) return res.status(404).json({ message: "No posts found" });
+
+    return res.status(200).json({ posts, totalCount });
+  } catch (error) {
+    console.error("Error fetching posts:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };

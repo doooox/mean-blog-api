@@ -5,6 +5,7 @@ import {
   addPost,
   deletePost,
   getPosts,
+  getPostsByCategory,
   getSinglePost,
   getUserPosts,
   updatePost,
@@ -30,5 +31,6 @@ postRouter.put(
   authMiddleware,
   updatePost
 );
+postRouter.get("/filter/:categoryId", getPostsByCategory);
 
 export default postRouter;
