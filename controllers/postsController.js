@@ -111,9 +111,8 @@ export const getPostsByCategory = async (req, res) => {
 export const updatePost = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, content } = req.body;
-    const author = req.user.id;
-
+    const { title, content, categories } = req.body;
+    const user = req.user.id;
     let imagePath = req.body.imagePath;
 
     if (req.file) {
@@ -121,7 +120,7 @@ export const updatePost = async (req, res) => {
       imagePath = url + "/images/" + req.file.filename;
     }
 
-    const post = await Post.findOne({ _id: id, author: author });
+    const post = await Post.findOne({ _id: id, author: user });
 
     if (!post) {
       return res.status(404).json({
@@ -132,6 +131,7 @@ export const updatePost = async (req, res) => {
     post.title = title || post.title;
     post.content = content || post.content;
     post.imagePath = imagePath || post.imagePath;
+    post.categories = categories || post.categories;
 
     const updatedPost = await post.save();
 
