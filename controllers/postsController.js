@@ -50,7 +50,8 @@ export const getSinglePost = async (req, res) => {
         },
       },
     ]);
-
+    post.views++;
+    post.save();
     if (!post) return res.status(404).json({ message: "No Post Was Found" });
 
     return res.status(200).json(post);
@@ -83,6 +84,18 @@ export const addPost = async (req, res) => {
     console.error("Error adding post:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
+};
+
+export const getSearchPosts = async (req, res) => {
+  const { query } = req.query;
+
+  const searchedPosts = await Post.find({
+    title: { $regex: query, $options: "i" },
+  }).select("_id, title");
+  if (!searchedPosts || searchedPosts === 0) {
+    return res.status(404).json({ message: "No Posts Found" });
+  }
+  return res.status(200).json(searchedPosts);
 };
 
 export const getPostsByCategory = async (req, res) => {

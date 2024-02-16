@@ -6,6 +6,7 @@ import {
   deletePost,
   getPosts,
   getPostsByCategory,
+  getSearchPosts,
   getSinglePost,
   getUserPosts,
   updatePost,
@@ -17,6 +18,7 @@ const postRouter = express.Router();
 
 postRouter.get("/", getPosts);
 postRouter.get("/myposts", authMiddleware, getUserPosts);
+postRouter.get("/search", getSearchPosts);
 postRouter.post(
   "/add",
   authMiddleware,

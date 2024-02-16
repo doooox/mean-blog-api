@@ -16,6 +16,10 @@ const postSchema = new Schema(
       type: String,
       required: true,
     },
+    views: {
+      type: Number,
+      default: 0,
+    },
     author: {
       type: Schema.Types.ObjectId,
       ref: "User",
