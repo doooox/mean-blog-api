@@ -13,6 +13,7 @@ import {
 } from "../controllers/postsController.js";
 import { storage } from "../middleware/uploadMiddleware.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
+import { likePosts } from "../controllers/likeController.js";
 
 const postRouter = express.Router();
 
@@ -27,6 +28,7 @@ postRouter.post(
 );
 postRouter.get("/:id", getSinglePost);
 postRouter.delete("/delete/:id", authMiddleware, deletePost);
+postRouter.put("/like/:postId", authMiddleware, likePosts);
 postRouter.put(
   "/update/:id",
   multer({ storage: storage }).single("image"),
