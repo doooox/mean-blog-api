@@ -15,6 +15,17 @@ export const socket = (app) => {
     socket.on("comment-added", () => {
       socket.to("comment-room").emit("comment-added");
     });
+    socket.join("like-room");
+    socket.on("post-liked", () => {
+      socket.to("like-room").emit("post-liked");
+    });
+    socket.join("post-room");
+    socket.on("post-added", () => {
+      socket.to("post-room").emit("post-added");
+    });
+    socket.on("post-deleted", () => {
+      socket.to("post-room").emit("post-deleted");
+    });
   });
 
   const port = 5001;
