@@ -3,6 +3,7 @@ import router from "../routes/router.js";
 import cors from "cors";
 import { CorsOptions } from "../utils/static.js";
 import { connectDB } from "../services/db.js";
+import { socket } from "../services/socketService.js";
 
 export const createApp = () => {
   connectDB();
@@ -14,5 +15,6 @@ export const createApp = () => {
   app.use(express.urlencoded({ extended: true }));
   app.use("/api", router);
 
+  socket(app);
   return app;
 };
