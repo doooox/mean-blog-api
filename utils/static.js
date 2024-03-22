@@ -1,5 +1,5 @@
 export const CorsOptions = {
-  origin: "http://localhost:4200",
+  origin: ["http://localhost:5173" || "http://localhost:4200"],
   credentials: true,
   preflightContinue: true,
   optionsSuccessStatus: 200,

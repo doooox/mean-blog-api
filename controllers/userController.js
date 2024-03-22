@@ -11,9 +11,11 @@ export const getUsers = async (req, res) => {
 export const RegisterUser = async (req, res) => {
   const { username, email, password } = req.body;
 
-  const userExists = await User.exists({ email });
+  const emailExists = await User.exists({ email });
+  const usernameExists = await User.exists({ username });
 
-  if (userExists) return res.status(400).json({ message: "Email Taken" });
+  if (emailExists || usernameExists)
+    return res.status(400).json({ message: "Credentials take" });
 
   const salt = await bcryptjs.genSalt(10);
   const hashPassword = await bcryptjs.hash(password, salt);

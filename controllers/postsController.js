@@ -67,7 +67,15 @@ export const addPost = async (req, res) => {
     const user = req.user.id;
     const url = req.protocol + "://" + req.get("host");
 
-    const parsedCategories = JSON.parse(categories);
+    let parsedCategories;
+
+    if (Array.isArray(categories)) {
+      parsedCategories = categories;
+    } else if (typeof categories === "string") {
+      parsedCategories = JSON.parse(categories);
+    } else {
+      throw new Error("Invalid categories format");
+    }
 
     const post = await Post.create({
       title,
